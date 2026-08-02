@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  password       String
+  name           String
+  bio            String?
+  photoUrl       String?
+  age             Int?
+  gender          String?
+  genderPreference String?
+
+  createdAt      DateTime  @default(now())
+  blocksReceived Block[]   @relation("BlocksReceived")
+  blocksSent     Block[]   @relation("BlocksSent")
+  likesSent      Like[]    @relation("LikesSent")
+  likesReceived  Like[]    @relation("LikesReceived")
+  matchesAsUser1 Match[]   @relation("MatchUser1")
+  matchesAsUser2 Match[]   @relation("MatchUser2")
+  messagesSent   Message[]
+}
+
+model Like {
+  id         String   @id @default(uuid())
+  fromUserId String
+  toUserId   String
+  status     String   @default("liked")// this is for like and pass bcz we are using same table
+  createdAt  DateTime @default(now())
+  fromUser   User     @relation("LikesSent", fields: [fromUserId], references: [id])
+  toUser     User     @relation("LikesReceived", fields: [toUserId], references: [id])
+
+  @@unique([fromUserId, toUserId])
+}
+
+model Match {
+  id        String    @id @default(uuid())
+  user1Id   String
+  user2Id   String
+  createdAt DateTime  @default(now())
+  user1     User      @relation("MatchUser1", fields: [user1Id], references: [id])
+  user2     User      @relation("MatchUser2", fields: [user2Id], references: [id])
+  messages  Message[]
+
+  @@unique([user1Id, user2Id])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  matchId   String
+  senderId  String
+  content   String
+  seen      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  match     Match    @relation(fields: [matchId], references: [id])
+  sender    User     @relation(fields: [senderId], references: [id])
+}
+
+model Block {
+  id        String   @id @default(uuid())
+  blockerId String
+  blockedId String
+  createdAt DateTime @default(now())
+  blocked   User     @relation("BlocksReceived", fields: [blockedId], references: [id])
+  blocker   User     @relation("BlocksSent", fields: [blockerId], references: [id])
+
+  @@unique([blockerId, blockedId])
+}

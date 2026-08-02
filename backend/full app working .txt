@@ -1,0 +1,2 @@
+cloudinary — lets our server talk to Cloudinary (upload images, get back links)
+multer — when a user uploads a photo from their browser, it arrives as raw file data. Multer's job is to catch that incoming file and hand it to us in a usable format, before we send it to Cloudinary.
