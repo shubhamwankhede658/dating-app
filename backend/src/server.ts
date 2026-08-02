@@ -13,7 +13,7 @@ import { Server } from "socket.io";//this is actual socket.io tool that will let
 
 
 
-import authRoutes from '../src/auth.route.js'
+import authRoutes from './routes/auth.route.js'
 import profileRoutes from './routes/profile.routes.js'
 import matchRoutes from './routes/match.routes.js'
 import chatRoutes from './routes/chat.routes.js'
