@@ -1,10 +1,17 @@
-import { Link } from "react-router-dom";
-import Logo from "../components/logo"
+import { Link, Navigate } from "react-router-dom";
+import Logo from "../components/Logo";
+import { useAuth } from "../context/AuthContext";
 
 export default function Intro() {
+  const { token } = useAuth();
+
+  if (token) {
+    return <Navigate to="/discover" replace />;
+  }
+
   return (
     <div className="app-container">
-      <div style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "24px", background: "linear-gradient(180deg, #eafaf1 0%, #d4f4e2 100%)" }}>
+      <div style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "24px", background: "linear-gradient(180deg, #eafaf1 0%, #d4f4e2 100%)", position: "relative" }}>
         <Logo size={220} />
 
         <p style={{ color: "#444", fontSize: "15px", textAlign: "center", marginTop: "12px", marginBottom: "48px" }}>
