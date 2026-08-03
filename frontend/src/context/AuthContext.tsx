@@ -48,8 +48,8 @@ condition ? value_if_true : value_if_false — if something was found (truthy), 
     function logout(){
         setUser(null);
         setToken(null);
-        localStorage.remove("user");
-        localStorage.remove("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
     }
 
 
