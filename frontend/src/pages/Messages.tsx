@@ -97,7 +97,11 @@ function handleMessagesSeen(data: { matchId: string }) {
   }
 
   if (loading) {
-    return <div style={{ padding: "24px", textAlign: "center" }}>Loading...</div>;
+    return (
+      <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(180deg, #eafaf1 0%, #d4f4e2 100%)" }}>
+        <p style={{ color: "#666" }}>Loading...</p>
+      </div>
+    );
   }
 
   return (
