@@ -5,9 +5,20 @@ export async function getMyMatches(req: Request, res: Response) {
   try {
     const userId = (req as any).userId;
 
+    const blocks = await prisma.block.findMany({
+      where: { OR: [{ blockerId: userId }, { blockedId: userId }] },
+    });
+    const blockedUserIds = blocks.map((block) =>
+      block.blockerId === userId ? block.blockedId : block.blockerId
+    );
+
     const matches = await prisma.match.findMany({
       where: {
         OR: [{ user1Id: userId }, { user2Id: userId }],
+        NOT: [
+          { user1Id: { in: blockedUserIds } },
+          { user2Id: { in: blockedUserIds } },
+        ],
       },
       include: {
         user1: { select: { id: true, name: true, photoUrl: true } },
@@ -24,22 +35,12 @@ export async function getMyMatches(req: Request, res: Response) {
         const otherUser = match.user1Id === userId ? match.user2 : match.user1;
         const lastMessage = match.messages[0] || null;
 
-        const unreadCount = await prisma.message.count({
-          where: {
-            matchId: match.id,
-            senderId: { not: userId },
-            seen: false,
-          },
-        });
-
         return {
           matchId: match.id,
           otherUser,
           lastMessage: lastMessage
-           
-        ? { content: lastMessage.content, createdAt: lastMessage.createdAt, senderId: lastMessage.senderId, seen: lastMessage.seen }
-        : null,
-          unreadCount,
+            ? { content: lastMessage.content, createdAt: lastMessage.createdAt, senderId: lastMessage.senderId, seen: lastMessage.seen }
+            : null,
         };
       })
     );
@@ -50,7 +51,6 @@ export async function getMyMatches(req: Request, res: Response) {
     res.status(500).json({ error: "Something went wrong" });
   }
 }
-
 
 export async function getMessages(req:Request, res:Response){
     try{
