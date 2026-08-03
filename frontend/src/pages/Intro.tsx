@@ -1,5 +1,5 @@
 import { Link, Navigate } from "react-router-dom";
-import Logo from "../components/Logo";
+import Logo from "../components/logo";
 import { useAuth } from "../context/AuthContext";
 
 export default function Intro() {
