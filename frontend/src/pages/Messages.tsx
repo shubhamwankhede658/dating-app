@@ -56,26 +56,25 @@ export default function Messages() {
   useEffect(() => {
     if (!socket) return;
 
-  function handleNewMessage(message: { matchId: string; content: string; senderId: string; createdAt: string; seen: boolean }) {
-  console.log("Received newMessage on Messages page:", message);
-  setMatches((prev) =>
-  prev.map((m) =>
-    m.matchId === message.matchId
-      ? { ...m, lastMessage: { content: message.content, senderId: message.senderId, createdAt: message.createdAt, seen: message.seen } }
-      : m
-  )
-);
-}
+    function handleNewMessage(message: { matchId: string; content: string; senderId: string; createdAt: string; seen: boolean }) {
+      setMatches((prev) =>
+        prev.map((m) =>
+          m.matchId === message.matchId
+            ? { ...m, lastMessage: { content: message.content, senderId: message.senderId, createdAt: message.createdAt, seen: message.seen } }
+            : m
+        )
+      );
+    }
 
-function handleMessagesSeen(data: { matchId: string }) {
-  setMatches((prev) =>
-    prev.map((m) =>
-      m.matchId === data.matchId && m.lastMessage && m.lastMessage.senderId === user?.id
-        ? { ...m, lastMessage: { ...m.lastMessage, seen: true } }
-        : m
-    )
-  );
-}
+    function handleMessagesSeen(data: { matchId: string }) {
+      setMatches((prev) =>
+        prev.map((m) =>
+          m.matchId === data.matchId && m.lastMessage && m.lastMessage.senderId === user?.id
+            ? { ...m, lastMessage: { ...m.lastMessage, seen: true } }
+            : m
+        )
+      );
+    }
 
     socket.on("newMessage", handleNewMessage);
     socket.on("messagesSeen", handleMessagesSeen);
@@ -84,7 +83,7 @@ function handleMessagesSeen(data: { matchId: string }) {
       socket.off("newMessage", handleNewMessage);
       socket.off("messagesSeen", handleMessagesSeen);
     };
-  }, [socket]);
+  }, [socket, user]);
 
   async function handleBlock(targetUserId: string, matchId: string) {
     try {
@@ -96,21 +95,15 @@ function handleMessagesSeen(data: { matchId: string }) {
     }
   }
 
-  if (loading) {
-    return (
-      <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(180deg, #eafaf1 0%, #d4f4e2 100%)" }}>
-        <p style={{ color: "#666" }}>Loading...</p>
-      </div>
-    );
-  }
-
   return (
     <div style={{ height: "100%", overflowY: "auto", background: "linear-gradient(180deg, #eafaf1 0%, #d4f4e2 100%)" }} onClick={() => setOpenMenuId(null)}>
       <div style={{ padding: "20px 20px 28px" }}>
         <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#1a1a1a" }}>Messages</h1>
       </div>
 
-      {matches.length === 0 ? (
+      {loading ? (
+        <p style={{ textAlign: "center", color: "#666", padding: "24px" }}>Loading...</p>
+      ) : matches.length === 0 ? (
         <p style={{ color: "#666", textAlign: "center", padding: "24px" }}>No matches yet — go like some profiles!</p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column" }}>
