@@ -55,7 +55,10 @@ export default function Settings() {
       </div>
 
       <div style={{ padding: "8px 20px 24px" }}>
-        <h3 style={{ fontSize: "15px", fontWeight: 600, color: "#1a1a1a", marginBottom: "12px" }}>Blocked users</h3>
+        <h3 style={{ fontSize: "15px", fontWeight: 600, color: "#1a1a1a", marginBottom: "6px" }}>Blocked users</h3>
+        <p style={{ fontSize: "13px", color: "#666", marginBottom: "16px", lineHeight: "1.5" }}>
+          Heads up if someone suddenly disappears from your chats, they've probably blocked you 😭.
+        </p>
 
         {loading ? (
           <p style={{ color: "#666", fontSize: "14px" }}>Loading...</p>
