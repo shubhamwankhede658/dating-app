@@ -8,12 +8,14 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       const res = await api.post("/auth/login", { email, password });
       login(res.data.user, res.data.token);
@@ -24,6 +26,8 @@ export default function Login() {
       }
     } catch (err: any) {
       setError(err.response?.data?.error || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -61,9 +65,10 @@ export default function Login() {
 
           <button
             type="submit"
-            style={{ width: "100%", padding: "16px", backgroundColor: "var(--primary)", color: "white", border: "none", borderRadius: "28px", fontSize: "16px", fontWeight: 600, marginTop: "10px" }}
+            disabled={loading}
+            style={{ width: "100%", padding: "16px", backgroundColor: "var(--primary)", color: "white", border: "none", borderRadius: "28px", fontSize: "16px", fontWeight: 600, marginTop: "10px", opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
           <p style={{ textAlign: "right", fontSize: "13px", color: "#444" }}>Forgot Password?</p>

@@ -39,7 +39,6 @@ export const io = new Server(httpServer,{
  * new Server(httpServer, {...}) — this creates our Socket.io engine, and attaches it to that same raw server we just made. So now one single server handles two kinds of traffic: normal Express requests (/api/auth/login, etc.) AND live socket connections — both coming through the same door, just handled differently
  */
 
-app.use(cors());//It allows your frontend (React, Next.js, etc.) to make requests to your backend if they're running on different origins.im telling express that its okay to accept request from other origins
 app.use(express.json());// to parse json bodies
 
 app.use('/api/auth',authRoutes);
@@ -87,18 +86,7 @@ io.use((socket, next)=>{
 
 
 
-//io is entire socket server 
-// io.on("connection",(socket)=>{//.on("connection", ...) — this means "run this function every single time any new user connects."
-//     //"connection" is a special, built-in event name in Socket.io that automatically fires every single time a new user connects. You don't create this event yourself — Socket.io provides it for you.
-//     /**Hey io (help desk), keep listening. Every time someone connects, immediately run this function — and give me that specific person's private line, calling it socket */
-//     console.log("A user connected:", socket.id);
-//     /**socket.id — remember, socket is this one specific caller's private line. .id is a property Socket.io automatically gives every connected user — a random unique code, like a ticket number, so we can tell different callers apart. */
 
-//     socket.on("disconnect",()=>{
-//         console.log("A user disconnected", socket.id)
-//         /**socket.on("disconnect", ...) — this is set up individually, for this one caller (socket) — we're saying "for this specific line, watch specifically for when this person hangs up." */
-//     })
-// })
 
 
 
@@ -118,7 +106,7 @@ export const onlineUsers = new Map<string, string>();
 io.on("connection",(socket)=>{
     const userId = (socket as any).userId;
     console.log("a user is connected:", userId);
-
+  
     onlineUsers.set(userId,socket.id);
 
     // now tell everyone the updated list of who is online// emit means send an event named online users 

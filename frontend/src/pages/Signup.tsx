@@ -9,18 +9,22 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       const res = await api.post("/auth/register", { name, email, password });
       login(res.data.user, res.data.token);
       navigate("/profile");
     } catch (err: any) {
       setError(err.response?.data?.error || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -69,9 +73,10 @@ export default function Signup() {
 
           <button
             type="submit"
-            style={{ width: "100%", padding: "16px", backgroundColor: "var(--primary)", color: "white", border: "none", borderRadius: "28px", fontSize: "16px", fontWeight: 600, marginTop: "10px" }}
+            disabled={loading}
+            style={{ width: "100%", padding: "16px", backgroundColor: "var(--primary)", color: "white", border: "none", borderRadius: "28px", fontSize: "16px", fontWeight: 600, marginTop: "10px", opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}
           >
-            Sign Up
+            {loading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
 

@@ -15,6 +15,22 @@ api.interceptors.request.use((config)=>{
 
 export default api;
 
+
+ 
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if(error.response?.status === 401){
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "/login";
+        }
+        return Promise.reject(error);
+    }
+)
+
+
+
 /**
  * When we tested this manually in Postman, we typed that header in ourselves, every single time. But in our real app, we're going to call these protected routes from many different pages — Discover, Profile, Chat, etc. Writing the same header-attaching code manually in every single one of those API calls would be repetitive and easy to forget.
 
