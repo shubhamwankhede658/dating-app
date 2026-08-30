@@ -20,7 +20,8 @@ export default api;
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if(error.response?.status === 401){
+        const hadToken = !!localStorage.getItem("token");
+        if(error.response?.status === 401 && hadToken){
             localStorage.removeItem("token");
             localStorage.removeItem("user");
             window.location.href = "/login";
