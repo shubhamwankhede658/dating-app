@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Heart, X } from "lucide-react";
 import api from "../lib/axios";
-import { useSocket } from "../context/SocketContext";
 
 type Profile = {
   id: string;
@@ -12,7 +11,6 @@ type Profile = {
 };
 
 export default function Discover() {
-  const { socket } = useSocket();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [matchMessage, setMatchMessage] = useState("");
@@ -31,21 +29,6 @@ export default function Discover() {
   useEffect(() => {
     fetchProfiles();
   }, []);
-
-  useEffect(() => {
-    if (!socket) return;
-
-    function handleNewMatch(data: { matchId: string; otherUser: { name: string } }) {
-      setMatchMessage(`You matched with ${data.otherUser.name}!`);
-      setTimeout(() => setMatchMessage(""), 3000);
-    }
-
-    socket.on("newMatch", handleNewMatch);
-
-    return () => {
-      socket.off("newMatch", handleNewMatch);
-    };
-  }, [socket]);
 
   async function handleLike() {
     const currentProfile = profiles[0];
