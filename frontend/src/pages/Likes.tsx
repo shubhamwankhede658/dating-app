@@ -63,8 +63,7 @@ export default function Likes() {
           {profiles.map((profile) => (
             <div
               key={profile.id}
-              onClick={() => handleLikeBack(profile.id, profile.name)}
-              style={{ position: "relative", borderRadius: "16px", overflow: "hidden", aspectRatio: "0.8", cursor: "pointer", backgroundColor: "#ddd" }}
+              style={{ position: "relative", borderRadius: "16px", overflow: "hidden", aspectRatio: "0.8", backgroundColor: "#ddd" }}
             >
               {profile.photoUrl && (
                 <img src={profile.photoUrl} alt={profile.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -74,9 +73,13 @@ export default function Likes() {
                 <p style={{ color: "white", fontSize: "14px", fontWeight: 600 }}>{profile.name}</p>
               </div>
 
-              <div style={{ position: "absolute", top: "10px", right: "10px", width: "30px", height: "30px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.9)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Heart size={15} color="var(--primary)" fill="var(--primary)" />
-              </div>
+              <button
+                onClick={() => handleLikeBack(profile.id, profile.name)}
+                className="like-btn"
+                style={{ position: "absolute", top: "10px", right: "10px", width: "38px", height: "38px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.9)", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+              >
+                <Heart size={19} color="var(--primary)" fill="var(--primary)" />
+              </button>
             </div>
           ))}
         </div>

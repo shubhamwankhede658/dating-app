@@ -36,3 +36,10 @@ body {
   justify-content: center;
   padding: 24px;
 }
+
+.like-btn {
+    transition: transform 0.2s ease;
+}
+.like-btn:hover {
+    transform: scale(1.15);
+}
